@@ -1,0 +1,88 @@
+﻿@attribute [Authorize]
+
+@page "/Backend"
+
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.Extensions.Options
+@using SimpLN.Models.Config
+
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthStateProvider
+@inject IOptions<PhoenixBackendSettings> Options
+
+<div class="auth-container">
+	<div class="auth-card">
+		<h3 class="auth-title">Backend Settings</h3>
+		<p class="auth-description">Configure your backend API credentials</p>
+
+		@if (!string.IsNullOrEmpty(_statusMessage))
+		{
+			<div class="alert alert-info">@_statusMessage</div>
+		}
+
+		<EditForm Model="@_model">
+			<DataAnnotationsValidator />
+
+			<div class="form-group">
+				<label>Backend URL</label>
+				<InputText disabled @bind-Value="_model.BackendUrl"
+				class="form-control auth-input"
+				placeholder="https://yourphoenixserver.com"
+				id="backendUrl" />
+				<ValidationMessage For="@(() => _model.BackendUrl)" class="text-danger auth-error" />
+			</div>
+
+			<div class="form-group">
+				<label>API Token</label>
+				<InputText disabled type="text"
+				@bind-Value="_model.ApiKey"
+				class="form-control auth-input"
+				placeholder="Your backend API token"
+				id="backendToken" />
+				<ValidationMessage For="@(() => _model.ApiKey)" class="text-danger auth-error" />
+			</div>
+			<div class="button-row-right mt-3">
+				<button type="button" class="custom-button custom-button-cancel" @onclick="GoToHome">Back</button>
+			</div>
+		</EditForm>
+	</div>
+</div>
+
+@code {
+	private BackendSettingsModel _model = new();
+	private string? _statusMessage;
+
+	protected override async Task OnInitializedAsync()
+	{
+		var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+		var user = authState.User;
+
+		if (!user.Identity?.IsAuthenticated ?? true)
+		{
+			NavigationManager.NavigateTo("/Account/Login");
+			return;
+		}
+
+		try
+		{
+			var apiHost = Options.Value.ApiUrl;
+			var password = Options.Value.ApiPassword;
+
+			// Assign values to the model
+			_model.BackendUrl = apiHost;
+			_model.ApiKey = password;
+
+			_statusMessage = "Settings loaded successfully.";
+		}
+		catch (Exception ex)
+		{
+			_statusMessage = $"Error loading settings: {ex.Message}";
+		}
+	}
+
+	private void GoToHome()
+	{
+		NavigationManager.NavigateTo("/", forceLoad: true);
+	}
+}

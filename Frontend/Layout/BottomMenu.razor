@@ -1,0 +1,229 @@
+﻿@inherits SimpLn
+
+@using Microsoft.IdentityModel.Tokens
+@using SimpLN.Enums
+@using SimpLN.Extensions
+@using SimpLN.Models
+@using SimpLN.Services.PhoenixServices
+@using SimpLN.Services.TranscationHistoryServices
+@using SimpLN.Services.UtilityServices
+
+@inject IJSRuntime Js
+@inject LoadingService LoadingService
+@inject IWalletService WalletService
+@inject OutgoingPaymentsService OutgoingPaymentService
+
+<div class="bottom-menu">
+	<button class="chevron-up-btn" @onclick="ToggleMenu">
+		<i class="bi @(_isMenuOpen ? "bi-chevron-down" : "bi-chevron-up")"></i>
+	</button>
+</div>
+
+<div class="sliding-menu @(_isMenuOpen ? "open" : "")">
+	<span class="mt-1 ps-1"><h3 class="ms-1 custom-h3">Transaction History</h3></span>
+	<div class="tabs mt-2">
+		<button class="tab-button @GetTabClass(Tab.All)" @onclick="() => SelectTab(Tab.All)">All</button>
+		<button class="tab-button @GetTabClass(Tab.Incoming)" @onclick="() => SelectTab(Tab.Incoming)">Incoming</button>
+		<button class="tab-button @GetTabClass(Tab.Outgoing)" @onclick="() => SelectTab(Tab.Outgoing)">Outgoing</button>
+	</div>
+	<div class="menu-content-bottommenu">
+		@if (LoadingService.IsLoading)
+		{
+			<div class="loading-spinner">
+				<div class="spinner"></div>
+			</div>
+		}
+		else
+		{
+			<HistoryGrid Transactions="@_filteredTransactions" OnNoteSaved="HandleNoteSaved" />
+		}
+	</div>
+</div>
+
+@code {
+	private bool _isMenuOpen = false;
+	private List<Transaction> _allTransactions = new();
+	private List<Transaction> _incomingTransactions = new();
+	private List<Transaction> _outgoingTransactions = new();
+	private List<Transaction> _filteredTransactions = new();
+
+	private Tab _activeTab = Tab.All;
+
+	private enum Tab { All, Incoming, Outgoing }
+
+	protected override async Task OnInitializedAsync()
+	{
+		try
+		{
+			LoadingService.StartLoading();
+			var currentTimeMs = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+			var dateBackInTime = DateTimeOffset.UtcNow.AddMonths(-1).ToUnixTimeMilliseconds();
+			var incomingQuery = new PaymentQueryParameters
+				{
+					From = 0,
+					To = currentTimeMs,
+					All = true,
+					Offset = 0,
+					Limit = 10000,
+				};
+			var outgoingQuery = new PaymentQueryParameters
+				{
+					From = 0,
+					To = currentTimeMs,
+					All = true,
+					Offset = 0,
+					Limit = 10000,
+				};
+
+			var incomingPayments = await WalletService.GetIncomingPaymentsAsync(incomingQuery);
+			var outgoingPayments = await WalletService.GetOutgoingPaymentsAsync(outgoingQuery);
+			var dbPayments = await OutgoingPaymentService.GetAll();
+
+			var userNoteLookup = dbPayments
+				.Where(p => p.PaymentHash != null && !string.IsNullOrEmpty(p.UserNote))
+				.ToDictionary(p => p.PaymentHash!, p => p.UserNote);
+
+			_incomingTransactions = incomingPayments
+				.Select(i => new Transaction
+					{
+						TransactionDate = DateTimeOffset.FromUnixTimeMilliseconds(i.CompletedAt).DateTime,
+						Amount = (int)i.ReceivedSat,
+						Fee = (int)i.Fees.ToSats(),
+						Description = i.Description,
+						PayerNote = i.PayerNote,
+						TransactionType = TransactionType.Receive,
+						PaymentHash = i.PaymentHash,
+						GotMessage = !i.Description.IsNullOrEmpty() ||
+									 !i.PayerNote.IsNullOrEmpty() ||
+									 (i.PaymentHash != null && userNoteLookup.ContainsKey(i.PaymentHash))
+					}).Where(x => x.TransactionDate > new DateTime(1970, 1, 1) && x.Amount > 0).ToList();
+
+			var messageLookup = dbPayments
+				.Where(p => p.PaymentHash != null)
+				.ToDictionary(p => p.PaymentHash!, p => p.Message);
+
+			var recipientLookup = dbPayments
+				.Where(p => p.PaymentHash != null && p.InvoiceString != null)
+				.ToDictionary(p => p.PaymentHash!, p => p.InvoiceString);
+
+			_outgoingTransactions = outgoingPayments.Select(o =>
+				{
+					var transaction = new Transaction
+					{
+						TransactionDate = DateTimeOffset.FromUnixTimeMilliseconds(o.CompletedAt).DateTime,
+						Amount = (int)o.Sent,
+						Fee = (int)o.Fees.ToSats(),
+						TransactionType = TransactionType.Send,
+						PaymentHash = o.PaymentHash,
+						Message = null,
+						Recipient = null,
+						GotMessage = o.PaymentHash != null && (
+							userNoteLookup.ContainsKey(o.PaymentHash) || 
+							messageLookup.ContainsKey(o.PaymentHash))
+					};
+
+					if (o.PaymentHash != null)
+					{
+						if (messageLookup.TryGetValue(o.PaymentHash, out var msg))
+						{
+							transaction.Message = msg;
+							transaction.GotMessage |= !string.IsNullOrEmpty(msg);
+						}
+
+						if (userNoteLookup.TryGetValue(o.PaymentHash, out var note))
+						{
+							transaction.GotMessage |= !string.IsNullOrEmpty(note);
+						}
+
+						if (recipientLookup.TryGetValue(o.PaymentHash, out var recipient))
+						{
+							transaction.Recipient = recipient;
+						}
+					}
+
+					return transaction;
+				})
+				.Where(x => x.TransactionDate > new DateTime(1970, 1, 1) && x.Amount > 0)
+				.ToList();
+
+			_allTransactions.AddRange(_incomingTransactions);
+			_allTransactions.AddRange(_outgoingTransactions);
+
+			_filteredTransactions = _allTransactions;
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine($"Error loading transactions: {ex.Message}");
+		}
+		finally
+		{
+			LoadingService.StopLoading();
+		}
+	}
+
+	private async Task HandleNoteSaved()
+	{
+		_allTransactions = new();
+		_incomingTransactions = new();
+		_outgoingTransactions = new();
+		_filteredTransactions = new();
+		LoadingService.StartLoading();
+		await OnInitializedAsync();
+		LoadingService.StopLoading();
+		StateHasChanged();
+	}
+
+	private void SelectTab(Tab tab)
+	{
+		_activeTab = tab;
+
+		_filteredTransactions = tab switch
+		{
+			Tab.All => _allTransactions,
+			Tab.Incoming => _incomingTransactions,
+			Tab.Outgoing => _outgoingTransactions,
+			_ => _allTransactions
+		};
+	}
+
+	private string GetTabClass(Tab tab)
+	{
+		return _activeTab == tab ? "active-tab" : "";
+	}
+
+	private async Task ToggleMenu()
+	{
+		_isMenuOpen = !_isMenuOpen;
+
+		if (_isMenuOpen)
+		{
+			RegisterClickOutsideListener();
+		}
+	}
+
+	private async void RegisterClickOutsideListener()
+	{
+		await Js.InvokeVoidAsync("addClickOutsideListenerForBottomMenu", DotNetObjectReference.Create(this));
+	}
+
+	[JSInvokable]
+	public void CloseMenuFromOutside()
+	{
+		_isMenuOpen = false;
+		StateHasChanged();
+	}
+
+	public class Transaction
+	{
+		public DateTime TransactionDate { get; set; }
+		public int Amount { get; set; }
+		public int Fee { get; set; }
+		public string? Message { get; set; } = string.Empty;
+		public string? Description { get; set; } = string.Empty;
+		public string? PayerNote { get; set; } = string.Empty;
+		public TransactionType TransactionType { get; set; }
+		public string? PaymentHash { get; set; }
+		public bool GotMessage { get; set; } = false;
+		public string? Recipient { get; set; }
+	}
+}

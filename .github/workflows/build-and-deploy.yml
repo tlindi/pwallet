@@ -1,0 +1,101 @@
+name: Build, Deploy, and Release pWallet
+
+on:
+  workflow_dispatch:  # Enables manual triggering from the GitHub UI
+
+jobs:
+  build-and-zip:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]  # Build for both Ubuntu and Windows
+
+    steps:
+      # Checkout the repository
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Setup .NET SDK
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 9.0.x
+
+      # Restore dependencies
+      - name: Restore Dependencies
+        run: dotnet restore
+
+      # Publish the application as a single file
+      - name: Publish Application (Single File)
+        run: |
+          if [ "${{ matrix.os }}" = "ubuntu-latest" ]; then
+            dotnet publish -c Release -r linux-x64 --self-contained true -p:PublishSingleFile=true -o ./publish-${{ matrix.os }}
+          else
+            dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o ./publish-${{ matrix.os }}
+          fi  # Close the if block properly
+        shell: bash
+
+      # Zip the published application (cross-platform)
+      - name: Zip Published Application
+        run: |
+          mkdir -p artifacts  # Ensure artifacts directory exists
+          if [ "${{ matrix.os }}" = "ubuntu-latest" ]; then
+            zip -r ./artifacts/build-linux.zip ./publish-${{ matrix.os }}
+          else
+            powershell.exe -Command "Compress-Archive -Path ./publish-${{ matrix.os }}/* -DestinationPath ./artifacts/build-windows.zip"
+          fi  # Close the if block properly
+        shell: bash
+
+      # Upload zipped artifact for later use in release creation
+      - name: Upload Zipped Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ matrix.os }}
+          path: artifacts/*
+
+  create-release:
+    needs: build-and-zip
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository (needed for creating the release)
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Download all artifacts from previous jobs
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+
+      # Create a GitHub release
+      - name: Create Release
+        id: create_release  # Save output for upload URL
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ github.run_number }}  # Tag for the release (incremental)
+          release_name: Release v${{ github.run_number }}
+          draft: true  # Set to true if you want a draft release
+          prerelease: false  # Set to true if this is a pre-release version
+
+      # Upload Linux artifact to the release (if it exists)
+      - name: Upload Linux Artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: build-ubuntu-latest/build-linux.zip  # Correct path to downloaded artifact
+          asset_name: build-linux.zip  # Name of the Linux artifact in the release
+          asset_content_type: application/zip
+
+      # Upload Windows artifact to the release (if it exists)
+      - name: Upload Windows Artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: build-windows-latest/build-windows.zip  # Correct path to downloaded artifact
+          asset_name: build-windows.zip  # Name of the Windows artifact in the release
+          asset_content_type: application/zip

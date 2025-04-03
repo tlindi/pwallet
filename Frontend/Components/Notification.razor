@@ -1,0 +1,24 @@
+﻿@inherits SimpLN.Frontend.Layout.SimpLn
+
+@implements IDisposable
+
+@using SimpLN.Services.UtilityServices
+
+@inject NotificationService NotificationService
+
+
+<div class="notification" style="@NotificationService.NotificationStyle">
+	<span>@NotificationService.NotificationMessage</span>
+</div>
+
+@code {
+	protected override void OnInitialized()
+	{
+		NotificationService.OnChange += async () => 
+		{
+			await InvokeAsync(StateHasChanged);
+		};
+	}
+
+	public void Dispose() => NotificationService.OnChange -= StateHasChanged;
+}

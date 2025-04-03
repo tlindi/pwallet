@@ -1,0 +1,7 @@
+{
+    "callback": "https://yourdomain.com/api/lnurl/pay/callback",
+    "maxSendable": 100000000,
+    "minSendable": 1000,
+    "metadata": "[[\"text/plain\",\"Send some sats!\"]]",
+    "tag": "payRequest"
+}
