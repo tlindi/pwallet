@@ -11,6 +11,8 @@ But since its .NET you can build the project and run it on any OS.
 It works with a SQLite database for account management and also to save your cloudflare credentials.
 Your Phoenixd Server credentials is added in appsettings.json
 
+***As for now the application restricts user registrations to only ONE user***
+
 The UI with Phoenix Server can handle:
 - Lightning invoices (pay and receive)
 - LNURL (pay and receive, LNURL string makes static QR to receive sats whenever)
