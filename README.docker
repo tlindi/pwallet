@@ -1,0 +1,65 @@
+# Install pwallet (2.0)
+
+sudo apt -y install dotnet 
+
+mkdir /opt/pwallet # make app home 
+mkdir ~/pwallet #make app datahome 
+
+cd /opt/pwallet 
+
+wget https://github.com/Hodladi/pWallet2.0/releases/download/v2/build-linux.zip # get build 
+
+tar zxfv build-linux.zip build # expand source rm build-linux.zip 
+cd build 
+
+# get appsettings.json and make it editable for docker
+#
+cp appsettings.json ~/pwallet
+touch /mnt/hdd/mynode/pwallet/appsettings.json
+chgrp docker ~/pwallet/appsettings.json
+chmod g+w ~/pwallet/appsettings.json
+
+# get wwwroot/.well-known/lnurlp and make it editable for docker
+#
+cp -av wwwroot/.well-known/lnurlp ~/pwallet/
+chgrp -R docker ~/pwallet/lnurlp
+chmod -R g+w ~/pwallet/lnurlp
+
+# modify appsettings.json
+#
+# Set API_URL
+export API_URL=http://192.168.1.12:9740
+#
+sed -i "s/\"ApiUrl\": \"SET BY USER\"/\"ApiUrl\": \"$(echo $API_URL | sed 's/\//\\\//g')\"/g" ~/pwallet/appsettings.json
+
+# Extract API_PASSWORD from phoenixd.conf
+#
+export API_PASSWORD=$(grep '^http-password=' ~/phoenix/phoenixd.conf | cut -d'=' -f2)
+# Set password and remove "," from end due following lines are commended later on
+#
+sed -i "s/\"ApiPassword\"\: \"SET BY USER\",/\"ApiPassword\"\: \"$API_PASSWORD\"/g" ~/pwallet/appsettings.json
+
+# Comment rest of the lines
+#
+sed -i 's/\"UiDomain\"\: \"SET BY USER\",/\/\/ \"UiDomain\"\: \"SET BY USER\",/g' ~/pwallet/appsettings.json
+sed -i 's/\"LnUrlpDomain\"\: \"SET BY USER\"/\/\/ \"LnUrlpDomain\"\: \"SET BY USER\"/g' ~/pwallet/appsettings.json
+
+# make db location stub 
+#
+touch ~/pwallet/simplLN.db 
+chgrp docker ~/pwallet/simplLN.db 
+chmod g+w ~/pwallet/simplLN.db 
+docker build pwallet . # build container 
+docker image prune -af
+
+
+# Build docker
+docker build -t pwallet2 .
+
+# Run docker
+docker run --rm --name pwallet2 \
+--publish 3939:3939 \
+--volume ~/pwallet/appsettings.json:/app/appsettings.json \
+--volume ~/pwallet/SimpLN.db:/app/SimpLN.db \
+--volume ~/pwallet/lnurlp:/app/lnurlp \
+pwallet2
