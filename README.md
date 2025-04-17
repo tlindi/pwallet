@@ -38,14 +38,17 @@ If you have a domain and handles dns for it through Cloudflare you can also:
    Then restart the application!
    If you run through Docker, you need to add files in Dockercontainer ( /wwwroot/.well-known/lnurlp )
 
-<img src="https://github.com/user-attachments/assets/4440df4f-5aa0-4efb-898f-ad9ccef15a3a" width="200px"/>
-<img src="https://github.com/user-attachments/assets/5e38fe40-2f44-491a-afc9-e80d1bb1e161" width="200px"/>
-<img src="https://github.com/user-attachments/assets/46bc03a6-42c1-493e-8008-37e0cb23e837" width="200px"/>
-<img src="https://github.com/user-attachments/assets/0ab298fe-612e-4ed2-87f5-783c95444299" width="200px"/>
-<img src="https://github.com/user-attachments/assets/4091ceda-c835-4fcc-aadc-f440b595fd31" width="200px"/>
-<img src="https://github.com/user-attachments/assets/0552288f-f732-496d-b900-bfffde0c256a" width="200px"/>
-<img src="https://github.com/user-attachments/assets/eceab3c2-950d-4718-92c2-90199207978c" width="200px"/>
-<img src="https://github.com/user-attachments/assets/b212ca46-77f9-48e1-a0fb-382c21c7e900" width="200px"/>
-<img src="https://github.com/user-attachments/assets/aded9035-a8ed-4676-92fe-b8043f487b9a" width="200px"/>
-<img src="https://github.com/user-attachments/assets/21f5a551-94f9-4ce2-bb28-2a48d8084caf" width="200px"/>
+
+<img src="https://github.com/user-attachments/assets/be4a156f-36ad-4299-86ba-3ecfba68481c" width="200px"/>
+<img src="https://github.com/user-attachments/assets/54a9148b-731e-44fa-98ad-29f44d551d9e" width="200px"/>
+<img src="https://github.com/user-attachments/assets/57e74927-266a-4561-9c25-f02d054500ba" width="200px"/>
+<img src="https://github.com/user-attachments/assets/155c84c8-4c8a-418d-af03-3e51b9487159" width="200px"/>
+<img src="https://github.com/user-attachments/assets/01ed6e16-4b03-4e13-9308-07aac58ff0b7" width="200px"/>
+<img src="https://github.com/user-attachments/assets/4c682ea1-fcd4-45ba-871c-d9e17672181d" width="200px"/>
+<img src="https://github.com/user-attachments/assets/223f2f2d-2fb1-4974-8ab8-c3a0858f8725" width="200px"/>
+<img src="https://github.com/user-attachments/assets/eda23b42-5514-43e9-95a0-ae8923c270b8" width="200px"/>
+<img src="https://github.com/user-attachments/assets/891c64c3-0e9b-47ea-bfff-f2a732440dd1" width="200px"/>
+<img src="https://github.com/user-attachments/assets/08e75a7b-48c3-47ed-bf1c-0b53a74b3e02" width="200px"/>
+<img src="https://github.com/user-attachments/assets/40530ed3-8dac-459d-90d3-0b668ad274c4" width="200px"/>
+
 
