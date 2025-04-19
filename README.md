@@ -1,4 +1,4 @@
-# pWallet 2.0
+# pWallet v2.0-tlindi_20250419
 This is a UI for Phoenixd Server by ACINQ.
 
 Its built in .NET 9 Blazor as a web application with PWA support so its "installable" through browser on your phone by adding it to home screen but can be used on a laptop through browser ( even here installable because of PWA support ).
