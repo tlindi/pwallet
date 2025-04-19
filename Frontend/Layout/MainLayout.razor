@@ -18,7 +18,10 @@
 			@Body
 		</article>
 	</main>
-	<BottomMenu />
+	@if (!NavManager.Uri.Contains("Login") && !NavManager.Uri.Contains("Register"))
+	{
+		<BottomMenu />
+	}
 </div>
 
 @code {
