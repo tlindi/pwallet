@@ -164,6 +164,13 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 					   ForwardedHeaders.XForwardedHost
 });
 
+app.UseDirectoryBrowser(new DirectoryBrowserOptions
+{
+	FileProvider = new PhysicalFileProvider(
+		Path.Combine(app.Environment.WebRootPath, ".well-known")),
+	RequestPath = "/.well-known"
+});
+
 app.Use(async (context, next) =>
 {
 	if (context.Request.Headers.TryGetValue("X-Forwarded-Host", out var host))
