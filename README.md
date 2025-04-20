@@ -32,8 +32,7 @@ If you have a domain and handles dns for it through Cloudflare you can also:
 - Create custom Bip353 address with your domain
 - Use the domain for LNURL string and LNURL-P addresses (zap@domain.com is activated and working).
 
-**PREREQUISITES
-
+**PREREQUISITES**
 <a href="https://phoenix.acinq.co/server" target="_blank">Phoenix Server by ACINQ</a>
 
 **BEFORE YOU START USING THE APPLICATION**
