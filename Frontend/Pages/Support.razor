@@ -1,0 +1,30 @@
+﻿@attribute [Authorize]
+
+@inject NavigationManager NavigationManager
+
+@page "/Support"
+@using Microsoft.AspNetCore.Authorization
+
+<div class="auth-container-support">
+	<div class="auth-card">
+		<h3 class="auth-title">Support</h3>
+		<p class="auth-description-support">
+			Most stuff needed to know is covered in the repo <a href="https://github.com/Hodladi/pWallet2.0/blob/main/README.md" target="_blank">README</a>.
+			But for faster response you can try below:<br /><br />
+			<span style="font-size:18px;" class="me-2"><i class="bi bi-telegram"></i></span><span style="font-size:18px;"><a href="https://t.me/pWalletApp" target="_blank">Telegram</a></span><br />
+			<span style="font-size:18px;"><img src="media/nostr_256.png" width="36px" /><a href="https://njump.me/npub1etjsy2xchyg7rdpujkqm4adsvar9yljc6x7atkn8j5tzu8uepswsf6xvks" target="_blank">Nostr</a></span>
+
+		</p>
+		<div class="button-row-right mt-3">
+			<button type="button" class="custom-button custom-button-cancel" @onclick="GoToHome">Back</button>
+		</div>
+	</div>
+</div>
+
+@code {
+
+	private void GoToHome()
+	{
+		NavigationManager.NavigateTo("/", forceLoad: true);
+	}
+}
