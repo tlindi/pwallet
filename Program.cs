@@ -151,8 +151,6 @@ app.MapControllers();
 
 app.MapStaticAssets();
 
-app.UseStaticFiles();
-
 app.MapRazorComponents<App>()
 	.AddInteractiveServerRenderMode();
 
@@ -164,13 +162,6 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 	ForwardedHeaders = ForwardedHeaders.XForwardedFor |
 					   ForwardedHeaders.XForwardedProto |
 					   ForwardedHeaders.XForwardedHost
-});
-
-app.UseDirectoryBrowser(new DirectoryBrowserOptions
-{
-	FileProvider = new PhysicalFileProvider(
-		Path.Combine(app.Environment.WebRootPath, ".well-known")),
-	RequestPath = "/.well-known"
 });
 
 app.Use(async (context, next) =>
