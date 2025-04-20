@@ -39,7 +39,7 @@ If you have a domain and handles dns for it through Cloudflare you can also:
    If you run through Docker, you need to add files in Dockercontainer ( /wwwroot/.well-known/lnurlp )
 
 
-**A special thanks to:**
+**A special thanks to:**<br/>
 <a href="https://github.com/funman2" target="_blank">@Funman2</a> for feature ideas and extensive testing!
 
 <img src="https://github.com/user-attachments/assets/be4a156f-36ad-4299-86ba-3ecfba68481c" width="200px"/>
