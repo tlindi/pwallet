@@ -52,6 +52,10 @@
 			</div>
 
 			<button type="submit" class="custom-button custom-button-outline w-100 mt-3">Log in</button>
+			@if (!string.IsNullOrEmpty(errorMessage))
+			{
+				<p class="text-danger auth-error">@errorMessage</p>
+			}
 		</EditForm>
 
 
@@ -78,7 +82,6 @@
 	{
 		if (HttpMethods.IsGet(HttpContext.Request.Method))
 		{
-			// Clear the existing external cookie to ensure a clean login process
 			await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 		}
 	}
@@ -104,7 +107,10 @@
 		}
 		else
 		{
-			errorMessage = "Error: Invalid login attempt.";
+			errorMessage = "Error: Invalid login. Check your email and password.";
+			Input.Email = "";
+			Input.Password = "";
+			StateHasChanged();
 		}
 	}
 
