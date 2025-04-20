@@ -1,5 +1,5 @@
 # pWallet 2.0
-This is a UI for Phoenixd Server by ACINQ.<br/>
+This is a UI for Phoenixd Server by ACINQ.<br/><br/>
 <a href="https://t.me/pWalletApp" target="_blank">pWallet Telegram</a><br/>
 <a href="https://t.me/pWalletAnnouncements" target="_blank">pWallet Announcements</a><br/><br/>
 Its built in .NET 9 Blazor as a web application with PWA support so its "installable" through browser on your phone by adding it to home screen but can be used on a laptop through browser ( even here installable because of PWA support ).
