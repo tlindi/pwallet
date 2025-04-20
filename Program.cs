@@ -151,6 +151,8 @@ app.MapControllers();
 
 app.MapStaticAssets();
 
+app.UseStaticFiles();
+
 app.MapRazorComponents<App>()
 	.AddInteractiveServerRenderMode();
 
