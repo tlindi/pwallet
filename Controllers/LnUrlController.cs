@@ -136,3 +136,43 @@ public class WellKnownController : ControllerBase
 		}
 	}
 }
+
+[ApiController]
+[Route(".well-known")]
+public class NostrWellKnownController : ControllerBase
+{
+	private readonly IWebHostEnvironment _env;
+
+	public NostrWellKnownController(IWebHostEnvironment env)
+	{
+		_env = env;
+	}
+
+	[HttpGet("nostr.json")]
+	public IActionResult GetNostrJson()
+	{
+		var fullPath = System.IO.Path.Combine(
+			_env.WebRootPath, 
+			".well-known", 
+			"nostr.json"
+		);
+
+		Response.Headers["Cache-Control"] = "no-store, no-cache";
+		Response.Headers["Expires"] = "-1";
+
+		if (!System.IO.File.Exists(fullPath))
+		{
+			return NotFound();
+		}
+
+		try
+		{
+			var fileBytes = System.IO.File.ReadAllBytes(fullPath);
+			return File(fileBytes, "application/json");
+		}
+		catch (Exception ex)
+		{
+			return StatusCode(500, new { status = "ERROR", reason = ex.Message });
+		}
+	}
+}

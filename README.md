@@ -1,6 +1,8 @@
-# pWallet v2.0-tlindi_20250419
-This is a UI for Phoenixd Server by ACINQ.
-
+# pWallet 2.0
+This is a UI for Phoenixd Server by ACINQ.<br/><br/>
+<a href="https://t.me/pWalletApp" target="_blank">pWallet Telegram</a><br/>
+<a href="https://t.me/pWalletAnnouncements" target="_blank">pWallet Announcements</a><br/>
+<a href="https://njump.me/_@pwallet.app" target="_blank">pWallet Nostr</a><br/><br/>
 Its built in .NET 9 Blazor as a web application with PWA support so its "installable" through browser on your phone by adding it to home screen but can be used on a laptop through browser ( even here installable because of PWA support ).
 
 You can also if you host or handle your DNS to your domain add cloudflare api credentials to add custom BIP353 address to your phoenixd server.
@@ -29,6 +31,10 @@ Extra:
 If you have a domain and handles dns for it through Cloudflare you can also:
 - Create custom Bip353 address with your domain
 - Use the domain for LNURL string and LNURL-P addresses (zap@domain.com is activated and working).
+
+**PREREQUISITES**
+
+<a href="https://phoenix.acinq.co/server" target="_blank">Phoenix Server by ACINQ</a>
 
 **BEFORE YOU START USING THE APPLICATION**
 1. Chose how to run! .exe for windows in Windows build, .dll for Linux ( needs ASP.NET Core Runtime for .NET 9 on your system ), and Dockerfile!
