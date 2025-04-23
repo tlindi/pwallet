@@ -46,7 +46,7 @@ If you have a domain and handles dns for it through Cloudflare you can also:
 
 
 **A special thanks to:**<br/>
-<a href="https://github.com/funman2" target="_blank">@Funman2</a> for feature ideas and extensive testing!
+<a href="https://github.com/Alex71btc" target="_blank">@Alex71btc</a> for feature ideas and extensive testing!
 
 <img src="https://github.com/user-attachments/assets/be4a156f-36ad-4299-86ba-3ecfba68481c" width="200px"/>
 <img src="https://github.com/user-attachments/assets/54a9148b-731e-44fa-98ad-29f44d551d9e" width="200px"/>
