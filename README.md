@@ -1,7 +1,8 @@
 # pWallet 2.0
 This is a UI for Phoenixd Server by ACINQ.<br/><br/>
 <a href="https://t.me/pWalletApp" target="_blank">pWallet Telegram</a><br/>
-<a href="https://t.me/pWalletAnnouncements" target="_blank">pWallet Announcements</a><br/><br/>
+<a href="https://t.me/pWalletAnnouncements" target="_blank">pWallet Announcements</a><br/>
+<a href="https://njump.me/_@pwallet.app" target="_blank">pWallet Nostr</a><br/><br/>
 Its built in .NET 9 Blazor as a web application with PWA support so its "installable" through browser on your phone by adding it to home screen but can be used on a laptop through browser ( even here installable because of PWA support ).
 
 You can also if you host or handle your DNS to your domain add cloudflare api credentials to add custom BIP353 address to your phoenixd server.
@@ -31,6 +32,10 @@ If you have a domain and handles dns for it through Cloudflare you can also:
 - Create custom Bip353 address with your domain
 - Use the domain for LNURL string and LNURL-P addresses (zap@domain.com is activated and working).
 
+**PREREQUISITES**
+
+<a href="https://phoenix.acinq.co/server" target="_blank">Phoenix Server by ACINQ</a>
+
 **BEFORE YOU START USING THE APPLICATION**
 1. Chose how to run! .exe for windows in Windows build, .dll for Linux ( needs ASP.NET Core Runtime for .NET 9 on your system ), and Dockerfile!
 2. Fill the appsettings.json with your credentials, if you run through Docker, make sure you edit appsettings.json before building image.
@@ -41,7 +46,7 @@ If you have a domain and handles dns for it through Cloudflare you can also:
 
 
 **A special thanks to:**<br/>
-<a href="https://github.com/funman2" target="_blank">@Funman2</a> for feature ideas and extensive testing!
+<a href="https://github.com/Alex71btc" target="_blank">@Alex71btc</a> for feature ideas and extensive testing!
 
 <img src="https://github.com/user-attachments/assets/be4a156f-36ad-4299-86ba-3ecfba68481c" width="200px"/>
 <img src="https://github.com/user-attachments/assets/54a9148b-731e-44fa-98ad-29f44d551d9e" width="200px"/>
