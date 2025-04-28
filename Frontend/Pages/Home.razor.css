@@ -32,7 +32,7 @@
     font-size: 20px;
     font-weight: 600;
     text-align: center;
-    margin-bottom: 10px;
+    margin-bottom: 0px;
 }
 
 .price-values-row {
@@ -79,7 +79,7 @@
 }
 
 .balance-main {
-    font-size: 64px;
+    font-size: 68px;
     font-family: 'Orbitron', 'Roboto Mono', monospace, sans-serif;
     font-weight: 800;
     color: #444444;
@@ -92,11 +92,11 @@
 }
 
     .balance-main:hover {
-        color: #FF9900;
-    }
+        color: #444444;
+    }    
 
 .smaller-font {
-    font-size: 40px;
+    font-size: 48px;
 }
 
 .balance-denominator {
@@ -158,11 +158,11 @@
     }
 
     .balance-main {
-        font-size: 48px;
+        font-size: 58px;
     }
 
     .smaller-font {
-        font-size: 36px;
+        font-size: 42px;
     }
 
     .price-header {
