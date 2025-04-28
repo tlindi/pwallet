@@ -83,7 +83,7 @@
     font-family: 'Orbitron', 'Roboto Mono', monospace, sans-serif;
     font-weight: 800;
     color: #444444;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
     cursor: pointer;
     transition: color 0.2s;
