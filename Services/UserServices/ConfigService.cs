@@ -12,10 +12,8 @@ public interface IConfigService
 	Task UpdateCloudflareSettingsAsync(CloudflareSettingsModel model);
 	Task UpdateCustomBolt12Async(string customBolt12);
 	Task<string?> GetCustomBolt12Async();
-
-
-
 }
+
 public class ConfigService : IConfigService
 {
 	private readonly ConfigRepository _repository;
