@@ -157,12 +157,21 @@ app.MapRazorComponents<App>()
 app.MapAdditionalIdentityEndpoints();
 
 app.UseCors("LNURL");
-app.UseForwardedHeaders(new ForwardedHeadersOptions
+//	app.UseForwardedHeaders(new ForwardedHeadersOptions
+//{
+//	ForwardedHeaders = ForwardedHeaders.XForwardedFor |
+//					   ForwardedHeaders.XForwardedProto |
+//					   ForwardedHeaders.XForwardedHost
+//});
+// Alternative Representation of Forwarders
+var forwardOptions = new ForwardedHeadersOptions
 {
-	ForwardedHeaders = ForwardedHeaders.XForwardedFor |
-					   ForwardedHeaders.XForwardedProto |
-					   ForwardedHeaders.XForwardedHost
-});
+    ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor |
+                       Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto
+};
+forwardOptions.KnownNetworks.Clear();
+forwardOptions.KnownProxies.Clear();
+app.UseForwardedHeaders(forwardOptions);
 
 app.Use(async (context, next) =>
 {
