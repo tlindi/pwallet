@@ -49,21 +49,26 @@ public class ConfigService : IConfigService
 	// 1st function using helper
 	public async Task<CloudflareSettingsModel> GetCloudflareSettingsAsync()
 	{
-		var user = GetSafeUser();
-		if (user == null)
+		Console.WriteLine($"HttpContext: {_httpContextAccessor.HttpContext}");
+		Console.WriteLine($"User: {_httpContextAccessor.HttpContext?.User}");
+		// Only this var is actually needed to fix the issue?
+		var httpContext = _httpContextAccessor.HttpContext;
+		if (httpContext == null || httpContext.User == null)
 		{
-			Console.WriteLine("Warning: HttpContext or User is null in GetCloudflareSettingsAsync! Returning default settings.");
-			return new CloudflareSettingsModel();
-		}
-		if (!user.Identity.IsAuthenticated)
-		{
-			Console.WriteLine("Warning: User is not authenticated in GetCloudflareSettingsAsync! Returning default settings.");
-			return new CloudflareSettingsModel();
+			Console.WriteLine("Warning: HttpContext or User is null at GetCloudflareSettingsAsync");
+			return null;
 		}
 		
-		var userId = user.FindFirst(ClaimTypes.NameIdentifier).Value;
-		var setting = await _repository.GetCloudflareSettingAsync(userId);
-		return MapEntityToModel(setting);
+		if (httpContext.User.Identity?.IsAuthenticated ?? false)
+		{
+			var userId = httpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+			var setting = await _repository.GetCloudflareSettingAsync(userId);
+			return MapEntityToModel(setting);
+		}
+		else
+		{
+			return new CloudflareSettingsModel();
+		}
 	}
 
 	// 
