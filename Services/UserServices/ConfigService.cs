@@ -33,6 +33,7 @@ public class ConfigService : IConfigService
 			Console.WriteLine("Warning: HttpContext or User is null at GetCloudflareSettingsAsync!");
 			return null;
 		}
+		
 		if (httpContext.User.Identity?.IsAuthenticated ?? false)
 		{
 			var userId = httpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -51,7 +52,7 @@ public class ConfigService : IConfigService
 		if (httpContext == null || httpContext?.User == null)
 		{
 			Console.WriteLine("Warning: HttpContext or User is null at UpdateCustomBolt12Async!");
-			return null;
+			return;
 		}
 
 		var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -80,7 +81,7 @@ public class ConfigService : IConfigService
 		if (httpContext == null || httpContext?.User == null)
 		{
 			Console.WriteLine("Warning: HttpContext or User is null at UpdateCloudflareSettingsAsync!");
-			return null;
+			return;
 		}
 
 		var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
