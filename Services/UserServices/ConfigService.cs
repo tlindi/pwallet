@@ -28,6 +28,11 @@ public class ConfigService : IConfigService
 	public async Task<CloudflareSettingsModel> GetCloudflareSettingsAsync()
 	{
 		var httpContext = _httpContextAccessor.HttpContext;
+		if (httpContext == null || httpContext?.User == null)
+		{
+			Console.WriteLine("Warning: HttpContext or User is null at GetCloudflareSettingsAsync!");
+			return null;
+		}
 		if (httpContext.User.Identity?.IsAuthenticated ?? false)
 		{
 			var userId = httpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -42,6 +47,13 @@ public class ConfigService : IConfigService
 
 	public async Task UpdateCustomBolt12Async(string customBolt12)
 	{
+		var httpContext = _httpContextAccessor.HttpContext;
+		if (httpContext == null || httpContext?.User == null)
+		{
+			Console.WriteLine("Warning: HttpContext or User is null at UpdateCustomBolt12Async!");
+			return null;
+		}
+
 		var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
 		var user = await _repository.GetUserAsync(userId);
 		user.CustomBolt12 = customBolt12;
@@ -53,7 +65,7 @@ public class ConfigService : IConfigService
 		var httpContext = _httpContextAccessor.HttpContext;
 		if (httpContext == null || httpContext?.User == null)
 		{
-			Console.WriteLine("Warning: HttpContext or User is null!");
+			Console.WriteLine("Warning: HttpContext or User is null at GetCustomBolt12Async!");
 			return null;
 		}
 
@@ -64,6 +76,13 @@ public class ConfigService : IConfigService
 
 	public async Task UpdateCloudflareSettingsAsync(CloudflareSettingsModel model)
 	{
+		var httpContext = _httpContextAccessor.HttpContext;
+		if (httpContext == null || httpContext?.User == null)
+		{
+			Console.WriteLine("Warning: HttpContext or User is null at UpdateCloudflareSettingsAsync!");
+			return null;
+		}
+
 		var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
 		var entity = await _repository.GetCloudflareSettingAsync(userId);
 		if (entity == null)
