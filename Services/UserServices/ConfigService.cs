@@ -30,7 +30,7 @@ public class ConfigService : IConfigService
 		var httpContext = _httpContextAccessor.HttpContext;
 		if (httpContext == null || httpContext?.User == null)
 		{
-			Console.WriteLine("Warning: HttpContext or User is null at GetCloudflareSettingsAsync!");
+			Console.WriteLine("[[[ WARNING ]]] HttpContext or User is null at GetCloudflareSettingsAsync!");
 			return null;
 		}
 		
@@ -51,7 +51,7 @@ public class ConfigService : IConfigService
 		var httpContext = _httpContextAccessor.HttpContext;
 		if (httpContext == null || httpContext?.User == null)
 		{
-			Console.WriteLine("Warning: HttpContext or User is null at UpdateCustomBolt12Async!");
+			Console.WriteLine("[[[ WARNING ]]] HttpContext or User is null at UpdateCustomBolt12Async!");
 			return;
 		}
 
@@ -66,7 +66,7 @@ public class ConfigService : IConfigService
 		var httpContext = _httpContextAccessor.HttpContext;
 		if (httpContext == null || httpContext?.User == null)
 		{
-			Console.WriteLine("Warning: HttpContext or User is null at GetCustomBolt12Async!");
+			Console.WriteLine("[[[ WARNING ]]] HttpContext or User is null at GetCustomBolt12Async!");
 			return null;
 		}
 
@@ -80,7 +80,7 @@ public class ConfigService : IConfigService
 		var httpContext = _httpContextAccessor.HttpContext;
 		if (httpContext == null || httpContext?.User == null)
 		{
-			Console.WriteLine("Warning: HttpContext or User is null at UpdateCloudflareSettingsAsync!");
+			Console.WriteLine("[[[ WARNING ]]] HttpContext or User is null at UpdateCloudflareSettingsAsync!");
 			return;
 		}
 
