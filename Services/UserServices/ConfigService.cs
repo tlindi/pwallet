@@ -111,15 +111,15 @@ public class ConfigService : IConfigService
 	// 2nd function to use helper
 	public async Task UpdateCloudflareSettingsAsync(CloudflareSettingsModel model)
 	{
-		Console.WriteLine($"HttpContext: {_httpContextAccessor.HttpContext}");
-		Console.WriteLine($"User: {_httpContextAccessor.HttpContext?.User}");
+//		Console.WriteLine($"HttpContext: {_httpContextAccessor.HttpContext}");
+//		Console.WriteLine($"User: {_httpContextAccessor.HttpContext?.User}");
 		// Only this var is actually needed to fix the issue?
-		var httpContext = _httpContextAccessor.HttpContext;
-		if (httpContext == null || httpContext?.User == null)
-		{
-			Console.WriteLine("Warning: HttpContext or User is null at UpdateCloudflareSettingsAsync");
-			return null;
-		}
+//		var httpContext = _httpContextAccessor.HttpContext;
+//		if (httpContext == null || httpContext?.User == null)
+//		{
+//			Console.WriteLine("Warning: HttpContext or User is null at UpdateCloudflareSettingsAsync");
+//			return null;
+//		}
 
 		var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
 		var entity = await _repository.GetCloudflareSettingAsync(userId);
