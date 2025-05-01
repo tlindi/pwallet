@@ -122,18 +122,13 @@ public class ConfigService : IConfigService
 		}
 
 		var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-		
 		var entity = await _repository.GetCloudflareSettingAsync(userId);
 		if (entity == null)
 		{
-			Console.WriteLine($"Info: No Cloudflare settings found for user {userId}. Creating new settings.");
 			entity = new CloudflareSetting { UserId = userId };
 		}
-
 		MapModelToEntity(model, entity);
 		await _repository.UpdateCloudflareSettingAsync(entity);
-		
-		Console.WriteLine($"Info: Cloudflare settings updated successfully for user {userId}.");
 	}
 
 	private CloudflareSettingsModel MapEntityToModel(CloudflareSetting entity)
